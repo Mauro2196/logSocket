@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Log Debug</title>
+  </head>
+  <style>
+    body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+    #logsList { margin: 0; padding: 0; }
+    #logsList > div { padding: 0.5rem 1rem; }
+    #logsList > div:nth-child(odd) { background: #efefef; }
+
+    p { display: inline; padding-inline: 10px;}
+    
+
+
+  </style>
+  <body>
+    <p>Logs Debugger</p>
+    <div id="Logs">
+      <div id="logsList"></div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var actual = [];
+      var socket = io();
+      var logs = document.getElementById('logsContainer');
+      var logsList = document.getElementById("logsList");
+
+      socket.on('log message', function(msg) {
+        var incoming = msg;
+        var pending = incoming.filter((el,index) => {
+            if(actual[index]){
+                return !actual[index].id == el.id 
+            }
+            else return true
+        });
+        pending.forEach(element => {
+          var item = document.createElement('div');
+          item.setAttribute("id", `log`);
+          var date = document.createElement('p');
+          date.textContent = JSON.stringify(element.date);
+          var logtext = document.createElement('p');
+          logtext.textContent = JSON.stringify(element.log);
+          var logId = document.createElement('p');
+          logId.textContent = JSON.stringify(element.id);
+          item.appendChild(logId);
+          item.appendChild(date);
+          item.appendChild(logtext);
+          logsList.appendChild(item);
+          window.scrollTo(0, document.body.scrollHeight);
+          actual=incoming;
+        });
+      });
+    </script>
+      
+  </body>
+</html>
