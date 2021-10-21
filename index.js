@@ -1,26 +1,23 @@
-const net = require('net');
+const express = require("express");
 
-let buffer = '';
+const port = '3000';
 
-const server = net.createServer((c) => { // 'connection' listener
-console.log('server connected');
-c.on('end', () => {
-    console.log('server disconnected');
-});
-c.on('error', (error) => {
-    console.log('server error: ', error);
-});
-c.on('data', (data) => {
-    buffer += data.toString();
-    const itsEnd = buffer.slice(-5);
-    if (itsEnd === '[end]') {
-    const newStr = buffer.slice(7, -5);
-    console.log(newStr);
-    buffer = '';
-    }
-});
-});
-server.listen(8124, () => { // 'listening' listener
-console.log('server bound');
-});
+const app = express();
+let logs = ""
+app.use(express.json());
+app.use(express.urlencoded({
+    extended: false
+  }));
 
+app.get('/', (req, res) => {
+    res.send(logs)
+});
+app.get('/logs', (req, res) => {
+    res.send(logs)
+});
+app.post('/find', (req, res) => {
+    logs = `${logs} \n\r` + JSON.stringify(req.body)
+    console.log(req.body)
+    res.send("Ok")
+});
+app.listen(port, () => console.log(`server started on port ${port}`));
