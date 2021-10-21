@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 app.get('/logs', (req, res) => {
     res.send(logs)
 });
-app.post('/find', (req, res) => {
+app.post('/log', (req, res) => {
     logs = `${logs} \n\r` + JSON.stringify(req.body)
     console.log(req.body)
     res.send("Ok")
