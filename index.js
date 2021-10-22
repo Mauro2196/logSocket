@@ -21,7 +21,7 @@ app.post('/log', (req, res) => {
     logObj = { 
         id: logId += 1, 
         date: getdate(),
-        log: JSON.stringify(req.body)
+        log: req.body
     };
     logs.push(logObj);
     console.log(req.body)
